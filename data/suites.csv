@@ -1,4 +1,4 @@
 "Status","Start Time","Stop Time","Duration in ms","Parent Suite","Suite","Sub Suite","Test Class","Test Method","Name","Description"
-"passed","Sat Oct 17 15:14:33 UTC 2026","Sat Oct 17 15:14:33 UTC 2026","58","TestCases","test_user","","","","test_register_success","正向：注册新用户，并查库验证"
-"passed","Sat Oct 17 15:14:34 UTC 2026","Sat Oct 17 15:14:34 UTC 2026","24","TestCases","test_user","","","","test_register_duplicate","反向：重复注册"
-"passed","Sat Oct 17 15:14:34 UTC 2026","Sat Oct 17 15:14:34 UTC 2026","25","TestCases","test_user","","","","test_login_fail","反向：密码错误登录"
+"passed","Sat Oct 17 15:43:28 UTC 2026","Sat Oct 17 15:43:28 UTC 2026","25","TestCases","test_user","","","","test_login_fail","反向：密码错误登录"
+"passed","Sat Oct 17 15:43:28 UTC 2026","Sat Oct 17 15:43:28 UTC 2026","25","TestCases","test_user","","","","test_register_duplicate","反向：重复注册"
+"passed","Sat Oct 17 15:43:28 UTC 2026","Sat Oct 17 15:43:28 UTC 2026","57","TestCases","test_user","","","","test_register_success","正向：注册新用户，并查库验证"
