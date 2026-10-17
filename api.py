@@ -9,10 +9,10 @@ CORS(app, supports_credentials=True)
 # 数据库连接配置（每次请求都新建一个连接，测试环境够用了）
 def get_db():
     return pymysql.connect(
-        host='localhost',
-        user='root',
-        password='Root@123456',  # <--- 这里一定要改！
-        database='mytestdb',
+        host=os.environ.get('DB_HOST', '127.0.0.1'),
+        user=os.environ.get('DB_USER', 'root'),
+        password=os.environ.get('DB_PASSWORD', 'Root@123456'),
+        database=os.environ.get('DB_NAME', 'mytestdb'),
         cursorclass=pymysql.cursors.DictCursor
     )
 

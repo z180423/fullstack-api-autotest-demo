@@ -45,10 +45,14 @@ jobs:
           );"
 
     - name: 启动 Flask 后端
+      env:
+        DB_HOST: 127.0.0.1
+        DB_USER: root
+        DB_PASSWORD: Root@123456
+        DB_NAME: mytestdb
       run: |
-        sed -i "s/host='localhost'/host='127.0.0.1'/" api.py
         nohup python api.py > flask.log 2>&1 &
-        sleep 3
+        sleep 5  # 多等一会儿，确保 MySQL 和 Flask 都就绪了
 
     - name: 运行 Pytest 自动化测试
       run: |

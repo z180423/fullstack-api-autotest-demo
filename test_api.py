@@ -1,8 +1,8 @@
 import requests
 import pytest
 
-# 基础 URL，指向我们部署好的 Nginx
-BASE_URL = "http://127.0.0.1/api"
+# GitHub没有nginx
+BASE_URL = "http://127.0.0.1:8000/api"
 
 def test_register_success():
     """测试正向用例：注册一个全新的用户"""
