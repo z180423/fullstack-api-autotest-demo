@@ -1,5 +1,9 @@
 name: API Automation Test
 
+# 赋予流水线推送到 gh-pages 分支的写权限
+permissions:
+  contents: write
+
 on:
   push:
     branches: [ "main" ]
@@ -52,20 +56,24 @@ jobs:
         DB_NAME: mytestdb
       run: |
         nohup python api.py > flask.log 2>&1 &
-        sleep 5  # 多等一会儿，确保 MySQL 和 Flask 都就绪了
+        sleep 5
 
     - name: 运行 Pytest 自动化测试
       run: |
         python -m pytest TestCases/test_user.py --alluredir=./allure-results -v
 
     - name: 生成 Allure 报告
+      if: always() # 无论测试成功还是失败，都生成报告，方便排查问题
       run: |
         wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.29.0/allure-commandline-2.29.0.tgz
         tar -zxvf allure-commandline-2.29.0.tgz
         ./allure-2.29.0/bin/allure generate ./allure-results -o ./allure-report --clean
 
-    - name: 上传测试报告作为 Artifact
-      uses: actions/upload-artifact@v4
+    # 这里的步骤是把报告发布到 GitHub Pages
+    - name: 发布 Allure 报告到 GitHub Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        name: allure-test-report
-        path: ./allure-report
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./allure-report
+        publish_branch: gh-pages
