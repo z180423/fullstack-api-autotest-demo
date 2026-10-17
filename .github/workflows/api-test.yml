@@ -56,7 +56,7 @@ jobs:
 
     - name: 运行 Pytest 自动化测试
       run: |
-        pytest -m pytest -o addopts="" --alluredir=./allure-results
+        python -m pytest TestCases/test_user.py --alluredir=./allure-results -v
 
     - name: 生成 Allure 报告
       run: |
