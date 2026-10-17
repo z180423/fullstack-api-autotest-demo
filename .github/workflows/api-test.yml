@@ -1,0 +1,67 @@
+name: API Automation Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: Root@123456
+          MYSQL_DATABASE: mytestdb
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+
+    - name: 设置 Python 环境
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: 安装依赖
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest requests flask flask-cors pymysql allure-pytest
+
+    - name: 初始化数据库
+      run: |
+        sleep 10
+        mysql -h 127.0.0.1 -u root -pRoot@123456 mytestdb -e "
+          CREATE TABLE IF NOT EXISTS users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(50) NOT NULL UNIQUE,
+            password VARCHAR(50) NOT NULL
+          );"
+
+    - name: 启动 Flask 后端
+      run: |
+        sed -i "s/host='localhost'/host='127.0.0.1'/" api.py
+        nohup python api.py > flask.log 2>&1 &
+        sleep 3
+
+    - name: 运行 Pytest 自动化测试
+      run: |
+        pytest test_api.py --alluredir=./allure-results
+
+    - name: 生成 Allure 报告
+      run: |
+        wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.29.0/allure-commandline-2.29.0.tgz
+        tar -zxvf allure-commandline-2.29.0.tgz
+        ./allure-2.29.0/bin/allure generate ./allure-results -o ./allure-report --clean
+
+    - name: 上传测试报告作为 Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: allure-test-report
+        path: ./allure-report
