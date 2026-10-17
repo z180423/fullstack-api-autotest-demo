@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import pymysql
+import os
 
 app = Flask(__name__)
 # 允许跨域请求
